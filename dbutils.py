@@ -6,6 +6,7 @@ import bsddb3
 from bsddb3 import db
 import os
 
+
 dbpath = 'berkeley-db'
 queuepath = 'queue'
 
@@ -32,6 +33,7 @@ def load_index_count_db(env,path):
     icdb.open(icfile,db.DB_BTREE,db.DB_CREATE,0660)
     return icdb
 
+
 def named_queue_file(name,path):
     nqfile = os.path.join(path,queuepath,'{}.db'.format(name))
     return nqfile
@@ -46,6 +48,7 @@ def load_named_queue(name,env,path):
 
     return nqueue
 
+
 def truncate_named_queue(name,env,path):
     nqueue = db.DB(env)
     nqueue.set_re_len(256)
@@ -59,46 +62,24 @@ def truncate_named_queue(name,env,path):
     f.close()
 
 
-
 if __name__ == '__main__':
+    
     pwd = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(pwd,'data',dbpath)
+    path = os.path.join(pwd,'data',dbpath)    
 
     env = init_env(path)
 
     uvdb = load_url_visit_db(env,path)
     icdb = load_index_count_db(env,path)
+
     uvdb.close()
     icdb.close()
     
-
     nqueue = load_named_queue('test',env,path)
-
-    
-    for i in range(1000000):
-        #uvdb.put(str(i),'')
-        #icdb.put(str(i),str(i))
-        nqueue.append(str(i))
-    
-
-    cur = nqueue.cursor()
-    print(cur)
-    for i in range(1000000):        
-        res = nqueue.consume()
-        if res == None:
-            break
-        #nqueue.delete(res[0])
-        print(res[1].strip())
-    
-    
-    print nqueue.consume()
-
-    nqueue.sync()
     nqueue.close()
     
     truncate_named_queue('test',env,path)
     
-
     env.close()
 
 
