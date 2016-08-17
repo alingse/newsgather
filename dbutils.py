@@ -70,9 +70,11 @@ if __name__ == '__main__':
     name = 'test'
     uvdb = load_url_visit_db(env,name,path)
     icdb = load_index_count_db(env,name,path)
-    uvdb.put('1','2')
-    uvdb.get('1')
-    uvdb.delete('1')
+    #for i in range(10000):
+    #    uvdb.put(str(i),str(i))
+    #print uvdb.get('1')
+    #uvdb.delete('1')
+    print uvdb.keys()
     uvdb.close()
     icdb.close()
     
