@@ -42,8 +42,9 @@ cnblogs.url_matchs = [_url_re.match,_url_re2.match]
 _index_re = re.compile('^http://www\.cnblogs\.com/[^/]+/$')
 _index_re2 = re.compile('^http://www\.cnblogs\.com/cate/\d+/$')
 _index_re3 = re.compile('^http://www\.cnblogs\.com/[^/]+/category/\d+\.html$')
+_index_re4 = re.compile('^http://www\.cnblogs\.com/.*/$')
 
-cnblogs.index_matchs = [_index_re.match,_index_re2.match,_index_re3.match]
+cnblogs.index_matchs = [_index_re.match,_index_re2.match,_index_re3.match,_index_re4.match]
 
 cnblogs.invalid_tails = _tails_set
 
@@ -102,8 +103,8 @@ def req_meta(url,**kwargs):
     except Exception as e:
         print(e)
 
-
 cnblogs.req_meta = req_meta
+
 
 if __name__ == '__main__':
     url = 'http://www.cnblogs.com/dissun/articles/5745896.html'
