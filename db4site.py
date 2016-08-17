@@ -58,6 +58,10 @@ class siteDB(object):
 
         return self.url_visit.exists(url)
 
+    def set(self,url):
+        
+        self.url_visit.put(url,'')
+
     def inc_count(self,index):
         cnt = self.index_count.get(index)
         if cnt == None:
