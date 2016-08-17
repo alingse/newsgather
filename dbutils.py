@@ -12,9 +12,9 @@ visitpath = 'visit'
 indexpath = 'index'
 queuepath = 'queue'
 
-url_visit_file = 'url.visit.{}.db'
-index_count_file = 'index.count.{}.db'
-queue_file = 'queue.{}.db'
+url_visit_file = '{}.url.visit.db'
+index_count_file = '{}.index.count.db'
+queue_file = '{}.queue.db'
 
 
 def init_env(path):
