@@ -18,6 +18,7 @@ class _site(config):
         super(_site,self).__init__()
         #self.__setattr__('func',self.func)
 
+
 _tails = ['.js','.css','.jpg','.jpeg','.png','.gif','.svg','.pdf','.icon','.mp3']
 _tails_set = set(_tails+map(str.upper,_tails))
         
