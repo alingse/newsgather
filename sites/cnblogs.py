@@ -12,7 +12,8 @@ import re
 
 from utils import config
 from utils import _site
-from utils import _tails_set
+from utils import tails_set
+from utils import user_agents
 
 cnblogs = _site()
 
@@ -36,7 +37,7 @@ cnblogs.seeds = gen_seeds()
 _url_re = re.compile('^http://www\.cnblogs\.com/[^/]+/(p|articles)/[0-9]+\.html$')
 _url_re2 = re.compile('^http://www\.cnblogs\.com/[^/]+/archive/\d{4}/\d{2}/\d{2}/\d+\.html$')
 
-cnblogs.url_matchs = [_url_re.match,_url_re2.match]
+cnblogs.url_matches = [_url_re.match,_url_re2.match]
 
 
 _index_re = re.compile('^http://www\.cnblogs\.com/[^/]+/$')
@@ -44,22 +45,28 @@ _index_re2 = re.compile('^http://www\.cnblogs\.com/cate/\d+/$')
 _index_re3 = re.compile('^http://www\.cnblogs\.com/[^/]+/category/\d+\.html$')
 _index_re4 = re.compile('^http://www\.cnblogs\.com/.*/$')
 
-cnblogs.index_matchs = [_index_re.match,_index_re2.match,_index_re3.match,_index_re4.match]
+cnblogs.index_matches = [_index_re.match,_index_re2.match,_index_re3.match,_index_re4.match]
 
-cnblogs.invalid_tails = _tails_set
+cnblogs.invalid_tails = tails_set
+
+headers = {
+    "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6", 
+    "Accept-Encoding": "gzip, deflate, sdch", 
+    "Host": "www.cnblogs.com", 
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", 
+    "Upgrade-Insecure-Requests": "1", 
+    "Connection": "keep-alive", 
+    "Pragma": "no-cache", 
+    "Cache-Control": "no-cache", 
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+}
+
+cnblogs.headers = headers
+
+cnblogs.user_agents = user_agents
+
 
 def req_html(url,encode='utf-8',**kwargs):
-    headers = {
-        "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6", 
-        "Accept-Encoding": "gzip, deflate, sdch", 
-        "Host": "www.cnblogs.com", 
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", 
-        "Upgrade-Insecure-Requests": "1", 
-        "Connection": "keep-alive", 
-        "Pragma": "no-cache", 
-        "Cache-Control": "no-cache", 
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
-    }
     try:
         if 'headers' not in kwargs:
             kwargs['headers'] = headers
@@ -91,18 +98,19 @@ def req_meta(url,**kwargs):
         meta['username'] = u
 
         view = req_html('http://www.cnblogs.com/mvc/blog/ViewCountCommentCout.aspx?postId='+postid)
-        meta['view'] = int(view) if view else 0
+        meta['view'] = int(view or 0)
         comment = req_html('http://www.cnblogs.com/mvc/blog/GetComments.aspx?postId='+postid+\
                             '&blogApp='+u+\
                             '&pageIndex=0&anchorCommentId=0&_=1471419238926')
 
         #meta['comment'] = json.loads(comment)['commentCount'] if comment else 0
-        meta['comment'] = int(comment[16:comment.find(',')]) if comment else 0
+        meta['comment'] = int(comment[16:comment.find(',')]) if comment or 0
 
         return meta
     except Exception as e:
         print(e)
 
+cnblogs.req_html = req_html
 cnblogs.req_meta = req_meta
 
 
