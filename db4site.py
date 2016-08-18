@@ -8,8 +8,6 @@ from dbutils import load_index_count_db
 from dbutils import load_named_queue
 from dbutils import truncate_named_queue
 
-from Queue import Queue
-from threading import Lock
 
 #统一几个不同作用的数据库
 class siteDB(object):
@@ -62,7 +60,7 @@ class siteDB(object):
         
         self.url_visit.put(url,'')
 
-    def inc_count(self,index):
+    def inc(self,index):
         cnt = self.index_count.get(index)
         if cnt == None:
             cnt = 0
