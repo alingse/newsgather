@@ -8,8 +8,6 @@ from pyquery import PyQuery as pq
 import urlparse
 import re
 
-from rqutils import load_sites
-
 from random import choice
 import json
 import sys
@@ -81,9 +79,9 @@ class siteReq(object):
         urlpath = urlhost + urld.path
 
 
-        _hrefs = hreffind(html)
+        hrefs = hreffind(html)
         links = []
-        for href in _hrefs:
+        for href in hrefs:
             if href.startswith('//'):
                 href = href.strip('//')
             elif href.startswith('/'):
@@ -123,9 +121,8 @@ class siteReq(object):
         
 
 if __name__ == '__main__':
+    from rqutils import load_sites
     slist = load_sites()
-    #from sites._cnblogs import cnblogs as site
-    #from sites.sites import sitelist
     site = slist[0]
 
     url = choice(site.seeds)
