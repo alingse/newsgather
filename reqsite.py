@@ -21,6 +21,11 @@ class siteReq(object):
     def __init__(self, site):
         self.site = site
 
+    def is_allow(self,host):
+        for match in self.site.allow_hosts_matches:
+            if match(host):
+                return True
+
     def is_url(self,url):
         for match in self.site.url_matches:
             if match(url):
@@ -30,6 +35,10 @@ class siteReq(object):
         for match in self.site.index_matches:
             if match(url):
                 return True
+
+    def is_invalidtail(self,tail):
+        if tail in self.site.invalid_tails:
+            return True
 
     @staticmethod
     def chg_ua(site,onlypc=None,onlymb=None):
@@ -47,11 +56,9 @@ class siteReq(object):
         site.headers['User-Agent'] = choice(ualist)
         return True
 
-
     def chg_my_ua(self,**kwargs):
 
         return self.chg_ua(self.site,**kwargs)
-
 
     def req_html(self,url):
         self.chg_my_ua()
@@ -98,43 +105,22 @@ class siteReq(object):
             #check - tail
             path = linkd.path
             tail = path[path.rfind('.'):]
-            if tail in site.invalid_tails:
-                continue
-
-            '''
-            #check - host
-            host = linkd.netloc
-            hit = False
-            for match in site.allow_hosts_matches:
-                if match(host):
-                    hit = True
-                    break
-            if not hit:
+            if self.is_invalidtail(tail):
                 continue
             '''
-
-            #urls
-            hit = False
-            for match in site.url_matches:
-                if match(link):
-                    hit = True
-                    urls.add(link)
-                    break
-            if hit:
+            if not self.is_allow(linkd.host):
                 continue
-
-            #indexes
-            for match in site.index_matches:
-                if match(link):
-                    indexes.add(link)
-                    break
+            '''
+            if self.is_url(link):
+                urls.add(link)
+    
+            elif self.is_index(link):
+                indexes.add(link)
 
         urls = list(urls)
         indexes = list(indexes)
         return urls,indexes
         
-
-
 
 if __name__ == '__main__':
     slist = load_sites()
