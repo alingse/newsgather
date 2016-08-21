@@ -2,6 +2,8 @@
 #author@alingse
 #2016.08.17
 
+from __future__ import print_function
+
 from pyquery import PyQuery as pq
 import urlparse
 import re
@@ -63,32 +65,74 @@ class siteReq(object):
         return meta
 
     #the most important
-    def html2hrefs(self,url,html):
+    def html2links(self,url,html):
         site = self.site
         host = site.host
-        urlnow = urlparse.urlparse(url)
+        urld = urlparse.urlparse(url)
+        #
+        urlhost = '{0.scheme}://{0.netloc}'.format(urld)
+        urlpath = urlhost + urld.path
 
-        hrefs = hreffind(html)
-        for href in hrefs:
+
+        _hrefs = hreffind(html)
+        links = []
+        for href in _hrefs:
+            if href.startswith('//'):
+                href = href.strip('//')
+            elif href.startswith('/'):
+                href = urlhost + href
+            elif '://' not in href:
+                href = urlpath + href
+
+            links.append(href)
+        return links
+
+
+    def shuffle(self,links):
+        site = self.site
+        urls = set()
+        indexes = set()
+        for link in links:
+            linkd = urlparse.urlparse(link)
+
+            #check - tail
+            path = linkd.path
+            tail = path[path.rfind('.'):]
+            if tail in site.invalid_tails:
+                continue
+
+            '''
+            #check - host
+            host = linkd.netloc
             hit = False
-            if href.startswith('/'):
-                if href.startswith('//'):
-                    pass
-                else:
-                    pass
-            
-            for scheme in self.site.schemes:
-                if href.startswith('{}://'.format(scheme)):
-                    pass
-            pass
+            for match in site.allow_hosts_matches:
+                if match(host):
+                    hit = True
+                    break
+            if not hit:
+                continue
+            '''
 
-        print(hrefs)
+            #urls
+            hit = False
+            for match in site.url_matches:
+                if match(link):
+                    hit = True
+                    urls.add(link)
+                    break
+            if hit:
+                continue
 
+            #indexes
+            for match in site.index_matches:
+                if match(link):
+                    indexes.add(link)
+                    break
 
-
-    @staticmethod
-    def shuffle(urls):
-        pass
+        urls = list(urls)
+        indexes = list(indexes)
+        return urls,indexes
+        
 
 
 
@@ -103,4 +147,9 @@ if __name__ == '__main__':
     req = siteReq(site)
     html = req.req_html(url)
     #print(html)
-    req.html2hrefs(url,html)
+    links = req.html2links(url,html)
+    urls,indexes = req.shuffle(links)
+    print('url')
+    map(print,urls)
+    print('index')
+    map(print,indexes)
