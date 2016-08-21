@@ -3,12 +3,16 @@
 #2016.08.17
 
 from pyquery import PyQuery as pq
-import requests
+import urlparse
+import re
+
+from rqutils import load_sites
 
 from random import choice
-
 import json
 import sys
+
+hreffind = re.compile('href *= *[\'"]([^\'"<]*)').findall
 
 class siteReq(object):
 
@@ -25,22 +29,78 @@ class siteReq(object):
             if match(url):
                 return True
 
-    def __chg_ua(self):
-        self.site.headers['User-Agent'] = choice(self.site.user_agents.pc)
+    @staticmethod
+    def chg_ua(site,onlypc=None,onlymb=None):
+        if onlymb and onlypc:
+            #raise Exception("")
+            return False
+        #ua = site.headers['User-Agent']
+        if onlypc:
+            ualist = site.user_agents.pc
+        elif onlymb:
+            ualist = site.user_agents.mobile
+        else:
+            ualist = choice([site.user_agents.mobile,site.user_agents.pc])
+
+        site.headers['User-Agent'] = choice(ualist)
+        return True
+
+
+    def chg_my_ua(self,**kwargs):
+
+        return self.chg_ua(self.site,**kwargs)
+
 
     def req_html(self,url):
-        self.__chg_ua()
+        self.chg_my_ua()
         html = self.site.req_html(url)
         return html
 
+
     def req_meta(self,url):
-        self.__chg_ua()
+        self.chg_my_ua()
         meta = self.site.req_meta(url)
         return meta
 
-    def parse_html(self,html):
+    #the most important
+    def html2hrefs(self,url,html):
+        site = self.site
+        host = site.host
+        urlnow = urlparse.urlparse(url)
+
+        hrefs = hreffind(html)
+        for href in hrefs:
+            hit = False
+            if href.startswith('/'):
+                if href.startswith('//'):
+                    pass
+                else:
+                    pass
+            
+            for scheme in self.site.schemes:
+                if href.startswith('{}://'.format(scheme)):
+                    pass
+            pass
+
+        print(hrefs)
+
+
+
+    @staticmethod
+    def shuffle(urls):
         pass
-        
+
+
 
 if __name__ == '__main__':
-    pass
+    slist = load_sites()
+    #from sites._cnblogs import cnblogs as site
+    #from sites.sites import sitelist
+    site = slist[0]
+
+    url = choice(site.seeds)
+
+    req = siteReq(site)
+    html = req.req_html(url)
+    #print(html)
+    req.html2hrefs(url,html)
