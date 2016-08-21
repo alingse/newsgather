@@ -37,7 +37,7 @@ def load_index_count_db(env,name,path):
     return icdb
 
 
-def load_named_queue(name,env,path):
+def load_named_queue(env,name,path):
     nqueue = db.DB(env)
     nqueue.set_re_len(256)
     nqueue.set_re_pad(' ')
@@ -47,7 +47,7 @@ def load_named_queue(name,env,path):
     return nqueue
 
 
-def truncate_named_queue(name,env,path):
+def truncate_named_queue(env,name,path):
     nqueue = db.DB(env)
     nqueue.set_re_len(256)
     nqueue.set_re_pad(' ')
@@ -78,11 +78,11 @@ if __name__ == '__main__':
     uvdb.close()
     icdb.close()
     
-    nqueue = load_named_queue('test',env,path)
+    nqueue = load_named_queue(env,name,path)
     nqueue.append('1')
     print(len(nqueue))
     nqueue.close()
-    truncate_named_queue('test',env,path)
+    truncate_named_queue(env,name,path)
     
     env.close()
 
