@@ -19,7 +19,6 @@ cnblogs = _site()
 
 cnblogs.host = 'www.cnblogs.com'
 
-cnblogs.allow_hosts_matchs = [re.compile('^.*\.cnblogs\.com$').match]
 
 def gen_seeds():
     seeds = []    
@@ -34,11 +33,12 @@ def gen_seeds():
 cnblogs.seeds = gen_seeds()
 
 
+cnblogs.allow_hosts_matchs = [re.compile('^.*\.cnblogs\.com$').match]
+
 _url_re = re.compile('^http://www\.cnblogs\.com/[^/]+/(p|articles)/[0-9]+\.html$')
 _url_re2 = re.compile('^http://www\.cnblogs\.com/[^/]+/archive/\d{4}/\d{2}/\d{2}/\d+\.html$')
 
 cnblogs.url_matches = [_url_re.match,_url_re2.match]
-
 
 _index_re = re.compile('^http://www\.cnblogs\.com/[^/]+/$')
 _index_re2 = re.compile('^http://www\.cnblogs\.com/cate/\d+/$')
@@ -47,7 +47,6 @@ _index_re4 = re.compile('^http://www\.cnblogs\.com/.*/$')
 
 cnblogs.index_matches = [_index_re.match,_index_re2.match,_index_re3.match,_index_re4.match]
 
-cnblogs.invalid_tails = tails_set
 
 headers = {
     "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6", 
@@ -63,8 +62,6 @@ headers = {
 
 cnblogs.headers = headers
 
-cnblogs.user_agents = user_agents
-
 
 def req_html(url,encode='utf-8',**kwargs):
     try:
@@ -77,7 +74,6 @@ def req_html(url,encode='utf-8',**kwargs):
         return html
     except Exception as e:
         pass
-
 
 def req_meta(url,**kwargs):
     html = req_html(url,**kwargs)
@@ -104,7 +100,7 @@ def req_meta(url,**kwargs):
                             '&pageIndex=0&anchorCommentId=0&_=1471419238926')
 
         #meta['comment'] = json.loads(comment)['commentCount'] if comment else 0
-        meta['comment'] = int(comment[16:comment.find(',')]) if comment or 0
+        meta['comment'] = int(comment[16:comment.find(',')]) if comment else 0
 
         return meta
     except Exception as e:
@@ -117,7 +113,7 @@ cnblogs.req_meta = req_meta
 if __name__ == '__main__':
     url = 'http://www.cnblogs.com/dissun/articles/5745896.html'
     hit = False
-    for match in cnblogs.url_matchs:
+    for match in cnblogs.url_matches:
         if match(url):
             hit = True
             break

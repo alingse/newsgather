@@ -15,17 +15,11 @@ class config(object):
             return self.__dict__[name]
         return None
 
-
-class _site(config):
-    def __init__(self):
-        super(_site,self).__init__()
-        #self.__setattr__('func',self.func)
-
-
 tails = ['.js','.css','.jpg','.jpeg','.png','.gif','.svg','.pdf','.icon','.mp3']
-tails_set = set(_tails+map(str.upper,_tails))
+tails_set = set(tails+map(str.upper,tails))
 
 user_agents = config()
+
 if True:
     user_agents.mobile = []
     user_agents.mobile.append("Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5")
@@ -65,6 +59,26 @@ if True:
     user_agents.pc.append("Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; en) Presto/2.8.131 Version/11.11")
     user_agents.pc.append("Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11")
 
+
+
+class _site(config):
+    def __init__(self,default=True):
+        super(_site,self).__init__()
+        if default:
+            self.set_default()
+
+    def set_default(self):
+        self.scheme = 'http'
+        self.invalid_tails = tails_set
+        self.user_agents = user_agents
+
+        pass
+
+
 if __name__ == '__main__':
     pass
     #print(invalid_tails)
+    #site = _site()
+    #print(site.__dict__)
+    #print(site.user_agents.__dict__)
+    
