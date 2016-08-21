@@ -39,16 +39,16 @@ cnblogs.seeds = gen_seeds()
 cnblogs.allow_hosts_matches = [re.compile('^.*\.cnblogs\.com$').match]
 
 
-_url_re = re.compile('^http://www\.cnblogs\.com/[^/]+/(p|articles)/[0-9]+\.html$')
-_url_re2 = re.compile('^http://www\.cnblogs\.com/[^/]+/archive/\d{4}/\d{2}/\d{2}/\d+\.html$')
+_url_re = re.compile('^http[s]?://www\.cnblogs\.com/[^/]+/(p|articles)/[0-9]+\.html$')
+_url_re2 = re.compile('^http[s]?://www\.cnblogs\.com/[^/]+/archive/\d{4}/\d{2}/\d{2}/\d+\.html$')
 
 cnblogs.url_matches = [_url_re.match,_url_re2.match]
 
 
-_index_re = re.compile('^http://www\.cnblogs\.com/[^/]+/$')
-_index_re2 = re.compile('^http://www\.cnblogs\.com/cate/\d+/$')
-_index_re3 = re.compile('^http://www\.cnblogs\.com/[^/]+/category/\d+\.html$')
-_index_re4 = re.compile('^http://www\.cnblogs\.com/.*/$')
+_index_re = re.compile('^http[s]?://www\.cnblogs\.com/[^/]+/$')
+_index_re2 = re.compile('^http[s]?://www\.cnblogs\.com/cate/\d+/$')
+_index_re3 = re.compile('^http[s]?://www\.cnblogs\.com/[^/]+/category/\d+\.html$')
+_index_re4 = re.compile('^http[s]?://www\.cnblogs\.com/.*/$')
 
 cnblogs.index_matches = [_index_re.match,_index_re2.match,_index_re3.match,_index_re4.match]
 
