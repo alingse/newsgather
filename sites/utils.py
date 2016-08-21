@@ -68,10 +68,9 @@ class _site(config):
             self.set_default()
 
     def set_default(self):
-        self.scheme = 'http'
+        self.schemes = ['http','https']
         self.invalid_tails = tails_set
         self.user_agents = user_agents
-
         pass
 
 
