@@ -2,12 +2,13 @@
 #author@alingse
 #2016.08.15
 
-from dbutils import init_env
+#from dbutils import init_env
 from dbutils import load_url_visit_db
 from dbutils import load_index_count_db
 from dbutils import load_named_queue
 from dbutils import truncate_named_queue
 
+#from esutils import init_es
 from esutils import bulk_post
 
 
@@ -86,11 +87,14 @@ class siteDB(object):
             cnt = int(cnt) + 1
         self.index_count.put(index,str(cnt))
 
-    def metasave(self,meta):
-        if len(self.metas) < self.essize:
+    def metasave(self,meta,quick=False):
+        if quick:
+            bulk_post(es,docs=[meta])    
+        elif len(self.metas) < self.essize:
             self.metas.append(meta)
             return
         bulk_post(es,docs=self.metas)
+        self.metas = []
 
 
 if __name__ == '__main__':
