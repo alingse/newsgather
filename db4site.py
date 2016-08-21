@@ -33,8 +33,10 @@ class siteDB(object):
     def init(self):
         for seed in self.site.seeds:
             self.put(seed)
-        for key in self.index_count.keys():
-            self.put(key)
+
+        for key,count in self.index_count.items():
+            if int(count) > 0:
+                self.put(key)
 
     def put(self,href):
         '''
