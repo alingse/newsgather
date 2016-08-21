@@ -8,29 +8,39 @@ from dbutils import load_index_count_db
 from dbutils import load_named_queue
 from dbutils import truncate_named_queue
 
+from esutils import bulk_post
+
 
 #统一几个不同作用的数据库
 class siteDB(object):
     
-    def __init__(self,site,env,path,maxsize=2000):
+    def __init__(self,site,es,env,datapath,essize=1000,maxsize=2000):
         self.site = site
-        
+        #es
+        self.es = es
+        self.essize = essize
+        #db
+        self.env = env
+        self.datapath = datapath
+        self.maxsize = maxsize
+
         name = self.site.host
         #truncate
-        truncate_named_queue(name,env,path)
-        queue = load_named_queue(name,env,path)
+        truncate_named_queue(name,env,datapath)
+        queue = load_named_queue(name,env,datapath)
 
-        url_visit = load_url_visit_db(env,path)
-        index_count = load_index_count_db(env,path)
-
-        self.env = env
+        url_visit = load_url_visit_db(env,datapath)
+        index_count = load_index_count_db(env,datapath)
+        #db
         self.queue = queue
         self.url_visit = url_visit
         self.index_count = index_count
         self.set = set()
-        self.maxsize = maxsize
+        
+        #es
+        self.metas = []
 
-    def init(self):
+    def dbinit(self):
         for seed in self.site.seeds:
             self.put(seed)
 
@@ -38,37 +48,50 @@ class siteDB(object):
             if int(count) > 0:
                 self.put(key)
 
-    def put(self,href):
+    def close(self):
+        self.url_visit.close()
+        self.index_count.close()
+        self.queue.close()
+        self.env.close()
+
+    def linkput(self,link):
         '''
         放入待请求队列
         '''
-        if href in self.set:
+        if link in self.set:
             return
-        self.queue.append(href[:256])
-        self.set.add(href)
+        self.queue.append(link[:256])
+        self.set.add(link)
         if len(self.set) >= self.maxsize:
             for i in range(maxsize/10):
                 self.set.pop()
 
-    def get(self):
+    def linkget(self):
 
         return self.queue.comsume()
 
-    def exists(self,url):
+    def urlexists(self,url):
 
         return self.url_visit.exists(url)
 
-    def set(self,url):
+    def urlset(self,url):
         
         self.url_visit.put(url,'')
 
-    def inc(self,index):
+    def indexinc(self,index):
         cnt = self.index_count.get(index)
         if cnt == None:
             cnt = 0
         else:
             cnt = int(cnt) + 1
         self.index_count.put(index,str(cnt))
+
+    def metasave(self,meta):
+        if len(self.metas) < self.essize:
+            self.metas.append(meta)
+            return
+        bulk_post(es,docs=self.metas)
+
 
 if __name__ == '__main__':
     pass

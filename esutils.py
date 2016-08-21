@@ -50,7 +50,7 @@ def putmap(es,index,doc_type):
     es.put_mapping(index,doc_type,mapping)
 
 
-def bulk_post(es,index, doc_type , docs = [],**kwargs):
+def bulk_post(es,index='news',doc_type='record', docs = [],**kwargs):
     #,id_field = 'id'
     res = es.bulk_index(index,doc_type,docs,**kwargs)
     return res
