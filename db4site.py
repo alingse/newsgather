@@ -69,6 +69,7 @@ class siteDB(object):
         if check:
             if link in self.set:
                 return
+        #256
         self.queue.append(link[:256])
         self.set.add(link)
         if len(self.set) >= self.maxsize:
@@ -78,7 +79,7 @@ class siteDB(object):
     def linkget(self):
         res = self.queue.consume()
         if res != None:
-            link = res[1]
+            link = res[1].strip()
             return link
 
     def urlexists(self,url):
