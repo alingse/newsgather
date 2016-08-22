@@ -76,8 +76,10 @@ class siteDB(object):
                 self.set.pop()
 
     def linkget(self):
-
-        return self.queue.consume()
+        res = self.queue.consume()
+        if res != None:
+            link = res[1]
+            return link
 
     def urlexists(self,url):
 

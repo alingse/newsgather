@@ -84,6 +84,7 @@ if __name__ == '__main__':
     nqueue = load_named_queue(env,name,path)
     nqueue.append('1')
     print(len(nqueue))
+    print(nqueue.consume())
     nqueue.close()
     truncate_named_queue(env,name,path)
     
