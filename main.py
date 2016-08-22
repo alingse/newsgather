@@ -74,7 +74,7 @@ def runsite(site,es,env,path):
     exit_all(runlist)
     while not all_exited(runlist):
         hold(diff)
-
+    sitedb.save()
     sitedb.close()
 
 

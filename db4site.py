@@ -15,7 +15,7 @@ from esutils import bulk_post
 #统一几个不同作用的数据库
 class siteDB(object):
     
-    def __init__(self,site,es,env,datapath,essize=1000,maxsize=2000):
+    def __init__(self,site,es,env,datapath,essize=10,maxsize=2000):
         self.site = site
         #es
         self.es = es
@@ -27,11 +27,11 @@ class siteDB(object):
 
         name = self.site.host
         #truncate
-        truncate_named_queue(name,env,datapath)
-        queue = load_named_queue(name,env,datapath)
+        truncate_named_queue(env,name,datapath)
+        queue = load_named_queue(env,name,datapath)
 
-        url_visit = load_url_visit_db(env,datapath)
-        index_count = load_index_count_db(env,datapath)
+        url_visit = load_url_visit_db(env,name,datapath)
+        index_count = load_index_count_db(env,name,datapath)
         #db
         self.queue = queue
         self.url_visit = url_visit
@@ -90,15 +90,19 @@ class siteDB(object):
             cnt = int(cnt) + 1
         self.index_count.put(index,str(cnt))
 
-    def metasave(self,meta,quick=False):
-        if quick:
-            bulk_post(es,docs=[meta])    
-        elif len(self.metas) < self.essize:
-            self.metas.append(meta)
-            return
-        bulk_post(es,docs=self.metas)
+    def save(self):
+        bulk_post(self.es,docs=self.metas)
         self.metas = []
 
+    def metasave(self,meta,quick=False):
+        if quick:
+            bulk_post(self.es,docs=[meta])
+            return
+
+        self.metas.append(meta)
+        if len(self.metas) >= self.essize:
+            self.save()
+        
 
 if __name__ == '__main__':
     pass
