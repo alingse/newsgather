@@ -41,7 +41,7 @@ class siteDB(object):
         #es
         self.metas = []
 
-    def dbinit(self):
+    def init(self):
         for seed in self.site.seeds:
             self.put(seed)
 

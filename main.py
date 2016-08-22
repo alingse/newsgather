@@ -2,6 +2,7 @@
 #author@alingse
 #2016.08.16
 
+from __future__ import print_function
 
 import argparse
 
@@ -22,9 +23,12 @@ from runutil import hold
 
 import os
 
+log = print
 
 def execute(sitedb,sitereq,ctrl):
     link = sitedb.linkget()
+    
+    log('start:',link)
 
     if link == None:
         empty = ctrl.get('empty',0)
@@ -40,6 +44,7 @@ def execute(sitedb,sitereq,ctrl):
     links = sitereq.html2links(link,html)
     urls,indexes = sitereq.shuffle(links)
 
+    log('got:',len(urls),len(indexes))
     #put
     for index in indexes:
         sitedb.linkput(index)
@@ -58,27 +63,35 @@ def execute(sitedb,sitereq,ctrl):
             sitedb.metasave(meta)
             sitedb.indexinc(link)
             sitedb.urlset(url)
+            log('mark',url)
 
 
 def runsite(site,es,env,path):
     sitedb = siteDB(site,es,env,path)
     sitereq = siteReq(site)
 
+    #init
+    sitedb.init()
+
+
     ctrl = {}
     args = (sitedb,sitereq,ctrl)
-
     #thct,diff
     runlist = init_runlist(execute,args=args,thct=5)
 
+    #wait
     diff = 0.5
     while True:
         if sitedb.qsize() == 0 and ctrl.get('empty',0) >= 20:
+            log('break-it')
             break
         hold(diff)
     
+    #exit
     exit_all(runlist)
     while not all_exited(runlist):
         hold(diff)
+
     sitedb.save()
     sitedb.close()
 
