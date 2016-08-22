@@ -58,7 +58,7 @@ def execute(sitedb,sitereq,ctrl):
             continue
         if ctrl.get('exit'):
             return
-        meta = sitereq.req_meta()
+        meta = sitereq.req_meta(url)
         if meta != None:
             sitedb.metasave(meta)
             sitedb.indexinc(link)

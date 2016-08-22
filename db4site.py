@@ -44,12 +44,7 @@ class siteDB(object):
     def init(self):
         for seed in self.site.seeds:
             self.linkput(seed)
-        '''
-        indcnt = list(self.index_count.items())
-        indlst,cntlst = zip(*indcnt)
-        cntlst = map(int,cntlst)
-        indcnt = zip(indlst,cntlst)
-        '''
+
         for key,count in self.index_count.items():
             if int(count) > 0:
                 self.linkput(key)
@@ -69,11 +64,15 @@ class siteDB(object):
         if check:
             if link in self.set:
                 return
-        #256
-        self.queue.append(link[:256])
+        
         self.set.add(link)
+        #unicode
+        #256
+        link = str(link)
+        self.queue.append(link[:256])
+        
         if len(self.set) >= self.maxsize:
-            for i in range(maxsize/10):
+            for i in range(self.maxsize/10):
                 self.set.pop()
 
     def linkget(self):
@@ -83,14 +82,15 @@ class siteDB(object):
             return link
 
     def urlexists(self,url):
-
+        url = str(url)
         return self.url_visit.exists(url)
 
     def urlset(self,url):
-        
+        url = str(url)
         self.url_visit.put(url,'')
 
     def indexinc(self,index):
+        index = str(index)
         cnt = self.index_count.get(index)
         if cnt == None:
             cnt = 0
