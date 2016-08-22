@@ -53,14 +53,15 @@ class siteDB(object):
         self.url_visit.close()
         self.index_count.close()
         self.queue.close()
-        self.env.close()
 
-    def linkput(self,link):
+
+    def linkput(self,link,check=True):
         '''
         放入待请求队列
         '''
-        if link in self.set:
-            return
+        if check:
+            if link in self.set:
+                return
         self.queue.append(link[:256])
         self.set.add(link)
         if len(self.set) >= self.maxsize:

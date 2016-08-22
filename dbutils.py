@@ -16,6 +16,11 @@ url_visit_file = '{}.url.visit.db'
 index_count_file = '{}.index.count.db'
 queue_file = '{}.queue.db'
 
+def load_default_path():
+    pwd = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(pwd,'data',dbpath)
+    return path
+
 
 def init_env(path):
     env = bsddb3.db.DBEnv()
@@ -62,9 +67,7 @@ def truncate_named_queue(env,name,path):
 
 if __name__ == '__main__':
     
-    pwd = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(pwd,'data',dbpath)    
-
+    path = load_default_path()
     env = init_env(path)
 
     name = 'test'
