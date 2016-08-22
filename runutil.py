@@ -31,6 +31,15 @@ class runUnit(Thread):
         self.exited = True
 
 
+def init_runlist(execute,diff=0.2,thct=5,**kwargs):
+    runlist = []
+    for i in range(thct):
+        u = runUnit(execute,diff=diff,**kwargs)
+        u.start()
+        runlist.append(u)
+    return runlist
+
+
 def exit_all(runlist):
     for unit in runlist:
         unit.shutdown()
@@ -46,15 +55,13 @@ def all_exited(runlist):
 if __name__ == '__main__':
     def execute(a=4,b=2):
         print(a,b)
+        sleep(0.3)
 
-    runlist = []
-    for i in range(3):
-        u = runUnit(execute,a=3,b=7)
-        u.start()
-        runlist.append(u)
+    runlist = init_runlist(execute,a=3,b=7)
     sleep(5)
     exit_all(runlist)
     while all_exited(runlist) != True:
+        print('check')
         sleep(0.1)
 
 
