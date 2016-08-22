@@ -65,7 +65,10 @@ def runsite(site,es,env,path):
     sitereq = siteReq(site)
 
     ctrl = {}
-    runlist = init_runlist(execute,sitedb,sitereq,ctrl)
+    args = (sitedb,sitereq,ctrl)
+
+    #thct,diff
+    runlist = init_runlist(execute,args=args,thct=5)
 
     diff = 0.5
     while sitedb.qsize() > 0 and ctrl.get('empty',0)>20:

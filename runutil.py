@@ -11,7 +11,7 @@ from operator import truth
 #或者是注册函数
 class runUnit(Thread):
 
-    def __init__(self,execute,diff = 0.1,*args,**kwargs):
+    def __init__(self,execute,args=(),kwargs={},diff = 0.1):
         super(runUnit,self).__init__()
         self.execute = execute
         self.diff = diff
@@ -32,10 +32,10 @@ class runUnit(Thread):
         self.exited = True
 
 
-def init_runlist(execute,diff=0.2,thct=5,*args,**kwargs):
+def init_runlist(execute,args=(),kwargs={},diff=0.2,thct=5):
     runlist = []
     for i in range(thct):
-        u = runUnit(execute,diff=diff,**kwargs)
+        u = runUnit(execute,args=args,kwargs=kwargs,diff=diff)
         u.start()
         runlist.append(u)
     return runlist
@@ -57,11 +57,12 @@ def all_exited(runlist):
 
 
 if __name__ == '__main__':
-    def execute(a=4,b=2):
-        print(a,b)
+    def execute(c,a=4,b=2):
+        print(a,b,c)
         sleep(0.3)
-
-    runlist = init_runlist(execute,a=3,b=7)
+    args = [9]
+    kwargs = dict(a=3,b=7)
+    runlist = init_runlist(execute,args=args,kwargs=kwargs)
     sleep(5)
     exit_all(runlist)
     while all_exited(runlist) != True:
