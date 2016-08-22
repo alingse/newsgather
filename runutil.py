@@ -26,7 +26,7 @@ class runUnit(Thread):
     def run(self):
         while not self.exit:
             self.execute(*args,**self.kwargs)
-            sleep(self.diff)
+            hold(self.diff)
         #exit
         self.exited = True
 
@@ -39,6 +39,8 @@ def init_runlist(execute,diff=0.2,thct=5,*args,**kwargs):
         runlist.append(u)
     return runlist
 
+def hold(diff=0.2):
+    sleep(diff)
 
 def exit_all(runlist):
     for unit in runlist:
@@ -50,6 +52,7 @@ def all_exited(runlist):
     if runs == []:
         return True
     return len(runs)
+
 
 
 if __name__ == '__main__':

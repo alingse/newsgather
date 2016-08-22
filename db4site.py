@@ -54,6 +54,8 @@ class siteDB(object):
         self.index_count.close()
         self.queue.close()
 
+    def qsize(self):
+        return len(self.queue)
 
     def linkput(self,link,check=True):
         '''
