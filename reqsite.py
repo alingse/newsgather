@@ -125,12 +125,12 @@ if __name__ == '__main__':
     slist = load_sites()
     site = slist[0]
 
-    url = choice(site.seeds)
+    link = choice(site.seeds)
     
     req = siteReq(site)
-    html = req.req_html(url)
+    html = req.req_html(link)
     #print(html)
-    links = req.html2links(url,html)
+    links = req.html2links(link,html)
     urls,indexes = req.shuffle(links)
     print('url')
     map(print,urls)
