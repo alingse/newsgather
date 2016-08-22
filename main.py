@@ -71,7 +71,9 @@ def runsite(site,es,env,path):
     runlist = init_runlist(execute,args=args,thct=5)
 
     diff = 0.5
-    while sitedb.qsize() > 0 and ctrl.get('empty',0)>20:
+    while True:
+        if sitedb.qsize() == 0 and ctrl.get('empty',0) >= 20:
+            break
         hold(diff)
     
     exit_all(runlist)

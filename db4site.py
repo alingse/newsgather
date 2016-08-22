@@ -91,6 +91,8 @@ class siteDB(object):
         self.index_count.put(index,str(cnt))
 
     def save(self):
+        if self.metas == []:
+            return
         bulk_post(self.es,docs=self.metas)
         self.metas = []
 
