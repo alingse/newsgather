@@ -72,7 +72,7 @@ class siteDB(object):
 
     def linkget(self):
 
-        return self.queue.comsume()
+        return self.queue.consume()
 
     def urlexists(self,url):
 
