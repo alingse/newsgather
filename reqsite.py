@@ -121,7 +121,7 @@ class siteReq(object):
         
 
 if __name__ == '__main__':
-    from rqutils import load_sites
+    from requtil import load_sites
     slist = load_sites()
     site = slist[0]
 

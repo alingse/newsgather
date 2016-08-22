@@ -15,6 +15,7 @@ class runUnit(Thread):
         super(runUnit,self).__init__()
         self.execute = execute
         self.diff = diff
+        self.args = args
         self.kwargs = kwargs
         self.exit = False
         self.exited = False
@@ -25,7 +26,7 @@ class runUnit(Thread):
 
     def run(self):
         while not self.exit:
-            self.execute(*args,**self.kwargs)
+            self.execute(*self.args,**self.kwargs)
             hold(self.diff)
         #exit
         self.exited = True
