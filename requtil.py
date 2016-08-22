@@ -3,7 +3,6 @@
 #2016.08.21
 
 from importlib import import_module
-import sys
 import os
 
 def load_sites(home='sites'):
@@ -30,5 +29,3 @@ def load_sites(home='sites'):
 if __name__ == '__main__':
     slist = load_sites()
     print(slist)
-    #_cnblogs = __import__('sites._cnblogs')
-    #print(_cnblogs.cnblogs.seeds)
