@@ -66,18 +66,18 @@ def truncate_named_queue(env,name,path):
 
 
 if __name__ == '__main__':
+    import sys
     
     path = load_default_path()
     env = init_env(path)
-
     name = 'test'
+    if len(sys.argv) == 2:
+        name = sys.argv[1]
+
     uvdb = load_url_visit_db(env,name,path)
     icdb = load_index_count_db(env,name,path)
-    #for i in range(10000):
-    #    uvdb.put(str(i),str(i))
-    #print uvdb.get('1')
-    #uvdb.delete('1')
-    print uvdb.keys()
+    print(len(uvdb))
+    print(len(icdb))
     uvdb.close()
     icdb.close()
     
