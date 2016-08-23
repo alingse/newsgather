@@ -100,9 +100,18 @@ def runsite(site,es,env,path):
         
     #exit
     exit_all(runlist)
-    while not all_exited(runlist):
-        hold(diff=0.5)
 
+    def alive(diff = 0.5):
+        while True:
+            cnt = all_exited(runlist)
+            if cnt == True:
+                break
+            log('still alive:',cnt)
+            hold(diff)
+
+    alive()
+    log('exit:all',len(runlist))
+        
     sitedb.save()
     sitedb.close()
 

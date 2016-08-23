@@ -49,11 +49,12 @@ def exit_all(runlist):
 
 
 def all_exited(runlist):
-    runs = filter(truth,[u.exited for u in runlist])
-    if runs == []:
+    runs = [u.isAlive() or not u.exited for u in runlist]
+    runs = filter(truth,runs)
+    alive = len(runs)
+    if alive == 0:
         return True
-    return len(runs)
-
+    return alive
 
 
 if __name__ == '__main__':
