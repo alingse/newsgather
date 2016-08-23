@@ -98,7 +98,11 @@ class siteReq(object):
         urls = set()
         indexes = set()
         for link in links:
-            linkd = urlparse.urlparse(link)
+            try:
+                linkd = urlparse.urlparse(link)
+            except Exception as e:
+                print('err:parse,',link)
+                continue
 
             #check - tail
             path = linkd.path

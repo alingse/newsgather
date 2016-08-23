@@ -80,7 +80,8 @@ if __name__ == '__main__':
     print(len(icdb))
     uvdb.close()
     icdb.close()
-    
+    if name != 'test':
+        exit()
     nqueue = load_named_queue(env,name,path)
     nqueue.append('1')
     print(len(nqueue))
