@@ -73,6 +73,8 @@ def execute(sitedb,sitereq,ctrl):
 
 
 def runsite(site,es,env,path):
+    log('this site start',site.host)
+    
     sitedb = siteDB(site,es,env,path)
     sitereq = siteReq(site)
 
@@ -93,7 +95,7 @@ def runsite(site,es,env,path):
                 break
             hold(diff)
     try:
-        wait()
+        wait(diff=2)
     except KeyboardInterrupt as e:
         print('wait.exit quickly')
         sitedb.save()
@@ -110,11 +112,13 @@ def runsite(site,es,env,path):
             hold(diff=diff)
 
     alive(diff=0.1)
-    
+
     log('exit:all',len(runlist))
         
     sitedb.save()
     sitedb.close()
+
+    log('this site end::',site.host)
 
 
 def main():
@@ -126,6 +130,7 @@ def main():
     while True:
         for site in sitelist:
             runsite(site,es,env,path)
+            hold(5*60)
         hold(0.5*60*60)
 
 if __name__ == '__main__':
