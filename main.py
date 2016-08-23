@@ -86,17 +86,22 @@ def runsite(site,es,env,path):
     runlist = init_runlist(execute,args=args,thct=5)
 
     #wait
-    diff = 0.5
-    while True:
-        if sitedb.qsize() == 0 and ctrl.get('empty',0) >= 20:
-            log('break-it')
-            break
-        hold(diff)
-    
+    def wait(diff = 0.5):
+        while True:
+            if sitedb.qsize() == 0 and ctrl.get('empty',0) >= 20:
+                log('break-it')
+                break
+            hold(diff)
+    try:
+        wait()
+    except KeyboardInterrupt as e:
+        print('wait.exit quickly')
+        sitedb.save()
+        
     #exit
     exit_all(runlist)
     while not all_exited(runlist):
-        hold(diff)
+        hold(diff=0.5)
 
     sitedb.save()
     sitedb.close()
