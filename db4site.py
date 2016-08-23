@@ -15,8 +15,8 @@ import datetime
 
 #统一几个不同作用的数据库
 class siteDB(object):
-    
-    def __init__(self,site,es,env,datapath,essize=500,maxsize=2000):
+
+    def __init__(self,site,es,env,datapath,essize=1000,maxsize=3000):
         self.site = site
         #es
         self.es = es
@@ -119,7 +119,9 @@ class siteDB(object):
             return
         self.metas.append(meta)
         if len(self.metas) >= self.essize:
-            self.save()
+            metas = self.metas
+            self.metas = []
+            self.save(metas=metas)
         
 
 if __name__ == '__main__':
