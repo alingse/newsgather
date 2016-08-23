@@ -85,7 +85,7 @@ def runsite(site,es,env,path):
     ctrl = {}
     args = (sitedb,sitereq,ctrl)
     #thct,diff
-    runlist = init_runlist(execute,args=args,thct=5)
+    runlist = init_runlist(execute,args=args,thct=3)
 
     #wait
     def wait(diff = 0.5):

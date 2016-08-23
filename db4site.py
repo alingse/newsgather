@@ -119,7 +119,9 @@ class siteDB(object):
             return
         self.metas.append(meta)
         if len(self.metas) >= self.essize:
-            self.save()
+            metas = self.metas
+            self.metas = []
+            self.save(metas=metas)
         
 
 if __name__ == '__main__':
