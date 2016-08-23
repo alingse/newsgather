@@ -100,21 +100,23 @@ class siteDB(object):
         cnt = int(cnt) + 1
         self.index_count.put(index,str(cnt))
 
-    def save(self):
-        if self.metas == []:
+    def save(self,metas=None):
+        #default save self
+        if metas == None:
+            metas = self.metas
+            self.metas = []
+        if metas == []:
             return
-        bulk_post(self.es,docs=self.metas)
-        self.metas = []
+        bulk_post(self.es,docs=metas,id_field='url')
+
 
     def metasave(self,meta,quick=False):
-
         meta['savetime'] = datetime.datetime.now()
         meta['host'] = self.name
 
         if quick:
-            bulk_post(self.es,docs=[meta])
+            self.save(metas=[meta])
             return
-
         self.metas.append(meta)
         if len(self.metas) >= self.essize:
             self.save()
