@@ -93,17 +93,27 @@ def req_meta(url,**kwargs):
         meta = {}
 
         meta['url'] = url
+
         meta['title'] = htmld('.postTitle2').text()
-        meta['posttime'] = timeparse(htmld('#post-date').text())
         meta['content'] = htmld('#cnblogs_post_body').text()
-        meta['nick'] = htmld('#Header1_HeaderTitle').text()
+        
+        date = htmld('#post-date').text().strip()
+        if date == '':
+            sk = html.find('cb_entryCreatedDate=\'')
+            if sk > -1:
+                sk = sk+21
+                ek = html.find('\'',sk)
+                date = html[sk:ek]
+        meta['posttime'] = timeparse(date)
+
+        meta['nick'] = htmld('title').text().split('-')[-2].strip()
 
         parts = url[:-5].split('/')
         u = parts[3]
         postid = parts[-1]
         
         meta['username'] = u
-
+        
         view = req_html('http://www.cnblogs.com/mvc/blog/ViewCountCommentCout.aspx?postId='+postid)
         meta['view'] = int(view or 0)
         comment = req_html('http://www.cnblogs.com/mvc/blog/GetComments.aspx?postId='+postid+\
@@ -122,7 +132,7 @@ cnblogs.req_html = req_html
 cnblogs.req_meta = req_meta
 
 if __name__ == '__main__':
-    url = 'http://www.cnblogs.com/dissun/articles/5745896.html'
+    url = 'http://www.cnblogs.com/gaizai/p/4001016.html'
     hit = False
     for match in cnblogs.url_matches:
         if match(url):
