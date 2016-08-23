@@ -52,7 +52,8 @@ def execute(sitedb,sitereq,ctrl):
         sitedb.linkput(index)
 
     for url in urls:
-        sitedb.linkput(url)
+        if not sitedb.urlexists(url):
+            sitedb.linkput(url)
 
     #meta
     for url in urls:
