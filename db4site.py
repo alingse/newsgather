@@ -11,6 +11,7 @@ from dbutils import truncate_named_queue
 #from esutils import init_es
 from esutils import bulk_post
 
+import datetime
 
 #统一几个不同作用的数据库
 class siteDB(object):
@@ -32,7 +33,9 @@ class siteDB(object):
 
         url_visit = load_url_visit_db(env,name,datapath)
         index_count = load_index_count_db(env,name,datapath)
+
         #db
+        self.name = name
         self.queue = queue
         self.url_visit = url_visit
         self.index_count = index_count
@@ -104,6 +107,10 @@ class siteDB(object):
         self.metas = []
 
     def metasave(self,meta,quick=False):
+
+        meta['savetime'] = datetime.datetime.now()
+        meta['host'] = self.name
+
         if quick:
             bulk_post(self.es,docs=[meta])
             return

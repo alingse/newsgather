@@ -81,7 +81,7 @@ def req_html(url,encode='utf-8',**kwargs):
         html = r.content.decode(encode).strip()
         return html
     except Exception as e:
-        print(e)
+        print(e,url)
         return False
 
 def req_meta(url,**kwargs):
@@ -91,6 +91,8 @@ def req_meta(url,**kwargs):
     try:
         htmld = pq(html)
         meta = {}
+
+        meta['url'] = url
         meta['title'] = htmld('.postTitle2').text()
         meta['posttime'] = timeparse(htmld('#post-date').text())
         meta['content'] = htmld('#cnblogs_post_body').text()
@@ -113,7 +115,7 @@ def req_meta(url,**kwargs):
 
         return meta
     except Exception as e:
-        print(e)
+        print(e,url)
         return False
 
 cnblogs.req_html = req_html
