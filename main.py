@@ -104,12 +104,13 @@ def runsite(site,es,env,path):
     def alive(diff = 0.5):
         while True:
             cnt = all_exited(runlist)
-            if cnt == True:
-                break
             log('still alive:',cnt)
-            hold(diff)
+            if cnt == 0:
+                break
+            hold(diff=diff)
 
-    alive()
+    alive(diff=0.1)
+    
     log('exit:all',len(runlist))
         
     sitedb.save()
