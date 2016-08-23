@@ -37,8 +37,10 @@ def execute(sitedb,sitereq,ctrl):
     ctrl['empty'] = 0
 
     html = sitereq.req_html(link)
-    if html == None:
-        sitedb.linkput(link,check=False)
+    if not html:
+        if html == False:
+            #retry
+            sitedb.linkput(link,check=False)
         return
 
     links = sitereq.html2links(link,html)
@@ -59,11 +61,14 @@ def execute(sitedb,sitereq,ctrl):
         if ctrl.get('exit'):
             return
         meta = sitereq.req_meta(url)
-        if meta != None:
+        if meta:
             sitedb.metasave(meta)
             sitedb.indexinc(link)
             sitedb.urlset(url)
             log('mark',url)
+        elif meta == False:
+            #retry
+            pass
 
 
 def runsite(site,es,env,path):

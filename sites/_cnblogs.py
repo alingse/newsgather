@@ -66,7 +66,8 @@ headers = {
 }
 cnblogs.headers = headers
 
-
+#None --> ignore
+#False --> retry
 def req_html(url,encode='utf-8',**kwargs):
     try:
         if 'headers' not in kwargs:
@@ -74,17 +75,19 @@ def req_html(url,encode='utf-8',**kwargs):
         if 'timeout' not in kwargs:
             kwargs['timeout'] = 3
 
-        r = requests.get(url,**kwargs)
+        r = requests.get(url,allow_redirects = False,**kwargs)
+        if r.status_code != 200:
+            return None
         html = r.content.decode(encode).strip()
         return html
     except Exception as e:
         print(e)
-        pass
+        return False
 
 def req_meta(url,**kwargs):
     html = req_html(url,**kwargs)
-    if html == None:
-        return None
+    if not html:
+        return html
     try:
         htmld = pq(html)
         meta = {}
@@ -111,6 +114,7 @@ def req_meta(url,**kwargs):
         return meta
     except Exception as e:
         print(e)
+        return False
 
 cnblogs.req_html = req_html
 cnblogs.req_meta = req_meta
