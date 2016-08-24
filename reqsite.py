@@ -114,11 +114,18 @@ class siteReq(object):
                 continue
             '''
 
-            #解决unicode unquote url
-            linkd = list(linkd)
             #use site charset
-            linkd[2] = quote(path.encode(self.site.urlcharset,'ignore'))
-            link = urlparse.urlunparse(list(linkd))
+            try:
+                _path = path.encode(self.site.urlcharset)
+            except Exception as e:
+                print('err:encode',e,link)
+                continue
+
+            if len(path) != len(_path):
+                #解决unicode unquote url
+                linkd = list(linkd)
+                linkd[2] = quote(_path)
+                link = urlparse.urlunparse(list(linkd))    
             
             if self.is_url(link):
                 urls.add(link)
@@ -142,6 +149,16 @@ if __name__ == '__main__':
     html = req.req_html(link)
     #print(html)
     links = req.html2links(link,html)
+    urls,indexes = req.shuffle(links)
+    print('url')
+    map(print,urls)
+    print('index')
+    map(print,indexes)
+    links = [
+        u'http://www.cnblogs.com/ansiboy/tag/Linq%2bAccess%2bC%23/',
+        u'http://www.cnblogs.com/ansiboy/tag/Linq+Access+C#/',
+        u'http://www.cnblogs.com/unruledboy/tag/技术栈/'
+        ]
     urls,indexes = req.shuffle(links)
     print('url')
     map(print,urls)
