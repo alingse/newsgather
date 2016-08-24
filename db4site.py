@@ -48,9 +48,17 @@ class siteDB(object):
         for seed in self.site.seeds:
             self.linkput(seed)
 
+        p = 2
+
+        visit = len(self.url_visit)
+        idxcnt = len(self.index_count)        
+        avg = visit/idxcnt/p
+        put = 0
         for key,count in self.index_count.items():
-            if int(count) > 0:
+            if int(count) > avg:
                 self.linkput(key)
+                put += 1
+        return avg,put
 
     def close(self):
         self.url_visit.close()
