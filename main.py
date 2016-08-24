@@ -80,7 +80,7 @@ def runsite(site,es,env,path):
 
     #init
     res = sitedb.init()
-    log('db:init:'res)
+    log('db:init:',res)
 
     ctrl = {}
     args = (sitedb,sitereq,ctrl)
