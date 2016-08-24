@@ -5,6 +5,7 @@
 from __future__ import print_function
 
 from pyquery import PyQuery as pq
+from urllib import quote
 import urlparse
 import re
 
@@ -78,7 +79,6 @@ class siteReq(object):
         urlhost = '{0.scheme}://{0.netloc}'.format(urld)
         urlpath = urlhost + urld.path
 
-
         hrefs = hreffind(html)
         links = []
         for href in hrefs:
@@ -113,6 +113,13 @@ class siteReq(object):
             if not self.is_allow(linkd.host):
                 continue
             '''
+
+            #解决unicode unquote url
+            linkd = list(linkd)
+            #use site charset
+            linkd[2] = quote(path.encode(self.site.urlcharset,'ignore'))
+            link = urlparse.urlunparse(list(linkd))
+            
             if self.is_url(link):
                 urls.add(link)
     
