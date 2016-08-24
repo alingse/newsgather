@@ -11,6 +11,7 @@ from dbutils import truncate_named_queue
 #from esutils import init_es
 from esutils import bulk_post
 
+from urllib import quote
 import datetime
 
 #统一几个不同作用的数据库
@@ -71,7 +72,7 @@ class siteDB(object):
         self.set.add(link)
         #unicode
         #256
-        link = str(link)
+        link = str(quote(link))
         self.queue.append(link[:256])
         
         if len(self.set) >= self.maxsize:
