@@ -16,7 +16,7 @@ import datetime
 
 #统一几个不同作用的数据库
 class siteDB(object):
-    
+
     def __init__(self,site,es,env,datapath,essize=1000,maxsize=3000):
         self.site = site
         #es
