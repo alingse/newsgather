@@ -62,15 +62,20 @@ if True:
 
 
 class _site(config):
-    def __init__(self,default=True):
+    def __init__(self,default=True,**kwargs):
         super(_site,self).__init__()
         if default:
-            self.set_default()
+            self.set_default(kwargs)
 
-    def set_default(self):
+    def set_default(self,kwargs):
         self.schemes = ['http','https']
         self.invalid_tails = tails_set
         self.user_agents = user_agents
+        self.charset = 'utf-8'
+        self.urlcharset = 'utf-8'
+        #set
+        for key,value in kwargs.items():
+            self.__dict__[key] = value
         pass
 
 
