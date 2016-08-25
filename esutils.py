@@ -42,6 +42,24 @@ def putmap(es,index,doc_type):
                     "search_analyzer": "ik_smart",
                     "include_in_all": "true",
                     "boost": 8
+                    },
+                "title":{
+                    "type": "string",
+                    "store": "no",
+                    "term_vector": "with_positions_offsets",
+                    "analyzer": "ik_smart",
+                    "search_analyzer": "ik_smart",
+                    "include_in_all": "true",
+                    "boost": 8
+                    },
+                "nick":{
+                    "type": "string",
+                    "store": "no",
+                    "term_vector": "with_positions_offsets",
+                    "analyzer": "ik_smart",
+                    "search_analyzer": "ik_smart",
+                    "include_in_all": "true",
+                    "boost": 8
                     }
                 }
             }
