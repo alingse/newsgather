@@ -51,9 +51,9 @@ def execute(sitedb,sitereq,ctrl):
     for index in indexes:
         sitedb.linkput(index)
 
-    for url in urls:
-        if not sitedb.urlexists(url):
-            sitedb.linkput(url)
+    #for url in urls:
+    #    if not sitedb.urlexists(url):
+    #        sitedb.linkput(url)
 
     #meta
     for url in urls:
@@ -85,7 +85,7 @@ def runsite(site,es,env,path):
     ctrl = {}
     args = (sitedb,sitereq,ctrl)
     #thct,diff
-    runlist = init_runlist(execute,args=args,thct=3)
+    runlist = init_runlist(execute,args=args,thct=7)
 
     #wait
     def wait(diff = 0.5):
