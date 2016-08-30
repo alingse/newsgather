@@ -37,7 +37,7 @@ def putmap(es,index,doc_type):
             "properties": {
                 "title": {
                     "type": "string",
-                    "store": "yes",
+                    "store": "no",
                     "term_vector": "with_positions_offsets",
                     "analyzer": "ik_smart",
                     "search_analyzer": "ik_smart",
@@ -46,7 +46,7 @@ def putmap(es,index,doc_type):
                     },
                 "content": {
                     "type": "string",
-                    "store": "yes",
+                    "store": "no",
                     "term_vector": "with_positions_offsets",
                     "analyzer": "ik_smart",
                     "search_analyzer": "ik_smart",
