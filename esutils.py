@@ -5,8 +5,9 @@
 from pyelasticsearch import ElasticSearch
 import sys
 
-#hosts = ['http://192.168.0.80']
-def init_es(hosts=['127.0.0.1'],port=9200,):
+
+_hosts = ['127.0.0.1']
+def init_es(hosts=_hosts,port=9200,):
     urls = map(lambda x:'http://'+x,hosts)
     es = ElasticSearch(urls = urls, port = port, timeout = 2*60)
     return es
@@ -16,7 +17,7 @@ def create(es,index):
     settings = {'settings': 
                     {'index': 
                         {'number_of_replicas': '0',
-                         'number_of_shards': '5'
+                         'number_of_shards': '3'
                          }
                     }
                 }
@@ -34,25 +35,16 @@ def putmap(es,index,doc_type):
                 "store": "false"
                 },
             "properties": {
+                "title": {
+                    "type": "string",
+                    "store": "no",
+                    "term_vector": "with_positions_offsets",
+                    "analyzer": "ik_smart",
+                    "search_analyzer": "ik_smart",
+                    "include_in_all": "true",
+                    "boost": 8
+                    },
                 "content": {
-                    "type": "string",
-                    "store": "no",
-                    "term_vector": "with_positions_offsets",
-                    "analyzer": "ik_smart",
-                    "search_analyzer": "ik_smart",
-                    "include_in_all": "true",
-                    "boost": 8
-                    },
-                "title":{
-                    "type": "string",
-                    "store": "no",
-                    "term_vector": "with_positions_offsets",
-                    "analyzer": "ik_smart",
-                    "search_analyzer": "ik_smart",
-                    "include_in_all": "true",
-                    "boost": 8
-                    },
-                "nick":{
                     "type": "string",
                     "store": "no",
                     "term_vector": "with_positions_offsets",

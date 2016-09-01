@@ -48,7 +48,7 @@ class siteDB(object):
         for seed in self.site.seeds:
             self.linkput(seed)
 
-        p = 0.9
+        p = 1.5
 
         visit = len(self.url_visit)
         idxcnt = len(self.index_count)        
