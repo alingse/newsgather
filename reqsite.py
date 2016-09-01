@@ -114,18 +114,22 @@ class siteReq(object):
                 continue
             '''
 
-            #use site charset
             try:
                 _path = path.encode(self.site.urlcharset)
             except Exception as e:
                 print('err:encode',e,link)
                 continue
 
+            #not ascii
             if len(path) != len(_path):
-                #解决unicode unquote url
-                linkd = list(linkd)
-                linkd[2] = quote(_path)
-                link = urlparse.urlunparse(list(linkd))    
+                #解决unicode unquote url                
+                path = quote(_path)
+
+            linkdlst = list(linkd)
+            linkdlst[2] = path
+            linkdlst[-1] = ''
+
+            link = urlparse.urlunparse(linkdlst)
             
             if self.is_url(link):
                 urls.add(link)
